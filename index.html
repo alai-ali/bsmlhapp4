@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BSMLH v7.5 | Restoration</title>
+    <title>BSMLH v7.6 | WeChat Profile Pro</title>
     <style>
-        :root { --gold: #f6851b; --bg: #000; --wc-bg: #f0f7f2; --neon: #00f2ff; }
+        :root { --gold: #f6851b; --bg: #000; --wc-bg: #ededed; --neon: #00f2ff; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: #000; color: #fff; height: 100vh; overflow: hidden; position: fixed; width: 100%; }
 
-        /* ЗАСТАВКА (ОРИГИНАЛ) */
+        /* ЗАСТАВКА */
         #splash { position: fixed; inset: 0; z-index: 9999; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; animation: fadeOut 0.5s forwards 2.5s; pointer-events: none; }
         @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
         .s-title { font-size: 50px; font-weight: 900; letter-spacing: 12px; color: #fff; }
@@ -33,23 +33,31 @@
         header { height: 60px; background: #1a1a1a; color: #fff; display: flex; justify-content: center; align-items: center; font-weight: 600; }
         .content { flex: 1; overflow-y: auto; }
 
-        /* ЧАТ (ВОССТАНОВЛЕН) */
-        .chat-item { display: flex; padding: 12px 15px; border-bottom: 1px solid #e2ebe4; align-items: center; background: var(--wc-bg); }
-        .chat-av { width: 48px; height: 48px; background: #fff; border-radius: 8px; margin-right: 12px; font-size: 24px; display: flex; align-items: center; justify-content: center; }
+        /* ЧАТ */
+        .chat-item { display: flex; padding: 12px 15px; border-bottom: 1px solid #dbdbdb; align-items: center; background: #fff; }
+        .chat-av { width: 48px; height: 48px; background: #eee; border-radius: 8px; margin-right: 12px; font-size: 24px; display: flex; align-items: center; justify-content: center; }
 
-        /* HUB & ПРОФИЛЬ */
+        /* HUB */
         .hub-wrap { padding: 15px; }
         .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .hub-tile { background: #fff; padding: 25px 10px; border-radius: 12px; text-align: center; font-weight: bold; font-size: 12px; border: 1px solid #eee; }
         .patent-tile { grid-column: span 2; background: #1a1a1a; color: var(--gold); border: 1px solid var(--gold); margin-bottom: 10px; padding: 20px; border-radius: 15px; text-align: center; font-weight: bold; }
-        
-        .wc-header { background: #fff; padding: 30px 20px; display: flex; align-items: center; margin-bottom: 10px; position: relative; }
-        .qr-icon { position: absolute; right: 25px; font-size: 24px; cursor: pointer; }
-        #user-photo { width: 64px; height: 64px; border-radius: 8px; margin-right: 15px; background: #eee; object-fit: cover; }
-        .wc-group { margin-bottom: 10px; background: #fff; }
-        .wc-item { padding: 15px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
 
-        /* МОДАЛКИ ПРОГРАММ */
+        /* ПРОФИЛЬ (WECHAT STYLE) */
+        .wc-header { background: #fff; padding: 40px 20px; display: flex; align-items: center; position: relative; margin-bottom: 8px; }
+        #user-photo { width: 64px; height: 64px; border-radius: 10px; margin-right: 20px; background: #f3f3f3; object-fit: cover; }
+        .qr-mini-btn { position: absolute; right: 25px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #888; cursor: pointer; }
+        .u-info h2 { font-size: 20px; margin-bottom: 4px; }
+        .u-info p { color: #888; font-size: 14px; }
+
+        .wc-group { background: #fff; margin-bottom: 8px; border-top: 0.5px solid #ddd; border-bottom: 0.5px solid #ddd; }
+        .wc-item { display: flex; align-items: center; padding: 14px 20px; position: relative; cursor: pointer; }
+        .wc-item:not(:last-child)::after { content: ''; position: absolute; left: 55px; right: 0; bottom: 0; height: 0.5px; background: #eee; }
+        .wc-icon { width: 22px; margin-right: 15px; font-size: 20px; text-align: center; }
+        .wc-text { flex: 1; font-size: 16px; color: #000; }
+        .wc-arrow { color: #b2b2b2; font-size: 14px; }
+
+        /* МОДАЛКИ */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 8000; flex-direction: column; align-items: center; justify-content: center; }
         .prog-box { background: #fff; padding: 20px; border-radius: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 90%; max-width: 320px; }
         .prog-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #000; text-decoration: none; }
@@ -76,7 +84,7 @@
             </div>
         </div>
         <h2 id="reg-t" style="margin-top: 80px; margin-bottom: 20px;">РЕГИСТРАЦИЯ</h2>
-        <input type="text" id="in-f" placeholder="ИМЯ" style="background:#111; border:1px solid #333; padding:16px; color:#fff; border-radius:12px; width:300px; margin-bottom:15px;">
+        <input type="text" id="in-f" placeholder="ИМЯ" style="background:#111; border:1px solid #333; padding:16px; color:#fff; border-radius:12px; width:300px; margin-bottom:15px; outline:none;">
         <button class="btn-m" onclick="startCam()">ДАЛЕЕ</button>
     </div>
 
@@ -96,7 +104,10 @@
         <header>BSMLH</header>
         <div class="content">
             <div id="view-chat"></div>
-            <div id="view-maps" style="display:none; height:100%;"><iframe src="https://maps.google.com/maps?output=embed" style="width:100%; height:100%; border:0;"></iframe></div>
+            
+            <div id="view-maps" style="display:none; height:100%;">
+                <iframe src="https://maps.google.com/maps?output=embed" style="width:100%; height:100%; border:0;"></iframe>
+            </div>
             
             <div id="view-hub" style="display:none;" class="hub-wrap">
                 <div class="patent-tile" onclick="openPatent()">🛠 ПАТЕНТНАЯ МАСТЕРСКАЯ</div>
@@ -111,15 +122,54 @@
             <div id="view-prof" style="display:none;">
                 <div class="wc-header">
                     <img id="user-photo" src="" alt="">
-                    <div><h2 id="u-name-disp">User</h2><p style="color:#999; font-size:12px;">ID: bsmlh_7701</p></div>
-                    <div class="qr-icon" onclick="openMod('modal-qr')">🔳</div>
+                    <div class="u-info">
+                        <h2 id="u-name-disp">User</h2>
+                        <p>ID: bsmlh_7701</p>
+                    </div>
+                    <div class="qr-mini-btn" onclick="openMod('modal-qr')">🔳</div>
                 </div>
+
                 <div class="wc-group">
-                    <div class="wc-item"><span>💳 Services</span><span>></span></div>
-                    <div class="wc-item"><span>⚙️ Settings</span><span>></span></div>
+                    <div class="wc-item">
+                        <span class="wc-icon">💳</span>
+                        <span class="wc-text">Services</span>
+                        <span class="wc-arrow">></span>
+                    </div>
+                </div>
+
+                <div class="wc-group">
+                    <div class="wc-item">
+                        <span class="wc-icon" style="color:#ff9500;">📦</span>
+                        <span class="wc-text">Favorites</span>
+                        <span class="wc-arrow">></span>
+                    </div>
+                    <div class="wc-item">
+                        <span class="wc-icon" style="color:#007aff;">🖼️</span>
+                        <span class="wc-text">Moments</span>
+                        <span class="wc-arrow">></span>
+                    </div>
+                    <div class="wc-item">
+                        <span class="wc-icon" style="color:#5ac8fa;">🧧</span>
+                        <span class="wc-text">Cards & Offers</span>
+                        <span class="wc-arrow">></span>
+                    </div>
+                    <div class="wc-item">
+                        <span class="wc-icon" style="color:#ffcc00;">😀</span>
+                        <span class="wc-text">Stickers</span>
+                        <span class="wc-arrow">></span>
+                    </div>
+                </div>
+
+                <div class="wc-group">
+                    <div class="wc-item">
+                        <span class="wc-icon" style="color:#4cd964;">⚙️</span>
+                        <span class="wc-text">Settings</span>
+                        <span class="wc-arrow">></span>
+                    </div>
                 </div>
             </div>
         </div>
+
         <footer>
             <div id="n-chat" class="n-btn on" onclick="tab('chat')">CHAT</div>
             <div id="n-maps" class="n-btn" onclick="tab('maps')">MAPS</div>
@@ -179,7 +229,7 @@
             const l = document.getElementById('view-chat');
             const u = [{n:"Alex",a:"🤖"},{n:"Sarah",a:"🎨"},{n:"Ahmed",a:"🌙"},{n:"Li",a:"🐲"},{n:"Maria",a:"🧬"}];
             l.innerHTML = u.map(x => `
-                <div class="chat-item"><div class="chat-av">${x.a}</div><div><h4>${x.n}</h4><p style="color:#88a08d; font-size:12px;">Secure connection...</p></div></div>
+                <div class="chat-item"><div class="chat-av">${x.a}</div><div><h4 style="font-weight:500;">${x.n}</h4><p style="color:#b2b2b2; font-size:13px;">Secure connection active</p></div></div>
             `).join('');
         }
 

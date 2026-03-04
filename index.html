@@ -3,30 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BSMLH v7.4 | Stable Step</title>
+    <title>BSMLH v7.5 | Restoration</title>
     <style>
         :root { --gold: #f6851b; --bg: #000; --wc-bg: #f0f7f2; --neon: #00f2ff; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: #000; color: #fff; height: 100vh; overflow: hidden; position: fixed; width: 100%; }
 
-        /* ЗАСТАВКА */
+        /* ЗАСТАВКА (ОРИГИНАЛ) */
         #splash { position: fixed; inset: 0; z-index: 9999; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; animation: fadeOut 0.5s forwards 2.5s; pointer-events: none; }
         @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
         .s-title { font-size: 50px; font-weight: 900; letter-spacing: 12px; color: #fff; }
-        .s-sub { font-size: 10px; color: #fff; margin-top: 15px; text-align: center; text-transform: uppercase; }
+        .s-sub { font-size: 10px; color: #fff; margin-top: 15px; text-align: center; max-width: 80%; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* ЭКРАНЫ */
+        /* ЭКРАНЫ РЕГИСТРАЦИИ */
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; padding: 25px; background: #000; z-index: 1000; }
         .active { display: flex; }
-        
-        /* ГЛОБУС И МЕНЮ ЯЗЫКА */
         .globe-wrap { position: absolute; top: 20px; right: 20px; z-index: 2000; cursor: pointer; }
         .lang-menu { position: absolute; top: 45px; right: 0; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; display: none; flex-direction: column; width: 120px; }
         .lang-menu div { padding: 12px; text-align: center; color: #fff; border-bottom: 1px solid #333; }
 
         /* КИБЕР-ГРАФИКА */
         .cyber-logo { width: 100px; height: 100px; border: 2px solid var(--neon); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 30px; position: relative; }
-        .cyber-logo::after { content: '🛡️'; font-size: 40px; }
+        .cyber-logo::after { content: '🛡️'; font-size: 45px; }
         .scan-line { position: absolute; width: 100%; height: 2px; background: var(--neon); animation: scan 2s infinite linear; top:0; }
         @keyframes scan { to { top: 100%; } }
 
@@ -35,20 +33,23 @@
         header { height: 60px; background: #1a1a1a; color: #fff; display: flex; justify-content: center; align-items: center; font-weight: 600; }
         .content { flex: 1; overflow-y: auto; }
 
-        /* HUB & TILES */
+        /* ЧАТ (ВОССТАНОВЛЕН) */
+        .chat-item { display: flex; padding: 12px 15px; border-bottom: 1px solid #e2ebe4; align-items: center; background: var(--wc-bg); }
+        .chat-av { width: 48px; height: 48px; background: #fff; border-radius: 8px; margin-right: 12px; font-size: 24px; display: flex; align-items: center; justify-content: center; }
+
+        /* HUB & ПРОФИЛЬ */
         .hub-wrap { padding: 15px; }
         .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .hub-tile { background: #fff; padding: 25px 10px; border-radius: 12px; text-align: center; font-weight: bold; font-size: 12px; border: 1px solid #eee; }
         .patent-tile { grid-column: span 2; background: #1a1a1a; color: var(--gold); border: 1px solid var(--gold); margin-bottom: 10px; padding: 20px; border-radius: 15px; text-align: center; font-weight: bold; }
-
-        /* ПРОФИЛЬ */
+        
         .wc-header { background: #fff; padding: 30px 20px; display: flex; align-items: center; margin-bottom: 10px; position: relative; }
         .qr-icon { position: absolute; right: 25px; font-size: 24px; cursor: pointer; }
         #user-photo { width: 64px; height: 64px; border-radius: 8px; margin-right: 15px; background: #eee; object-fit: cover; }
         .wc-group { margin-bottom: 10px; background: #fff; }
         .wc-item { padding: 15px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
 
-        /* МОДАЛКИ */
+        /* МОДАЛКИ ПРОГРАММ */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 8000; flex-direction: column; align-items: center; justify-content: center; }
         .prog-box { background: #fff; padding: 20px; border-radius: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 90%; max-width: 320px; }
         .prog-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #000; text-decoration: none; }
@@ -62,7 +63,10 @@
 </head>
 <body>
 
-    <div id="splash"><div class="s-title">BSMLH</div><div class="s-sub">BIOMETRIC SECURITY LEDGER</div></div>
+    <div id="splash">
+        <div class="s-title">BSMLH</div>
+        <div class="s-sub">BIOMETRIC SECURITY MULTIFUNCTION LEDGER FOR HUMANITY</div>
+    </div>
 
     <div id="scr-reg" class="screen active">
         <div class="globe-wrap" onclick="toggleLang()"><div style="font-size:30px;">🌐</div>
@@ -83,7 +87,7 @@
 
     <div id="scr-chip" class="screen">
         <div class="cyber-logo"><div class="scan-line"></div></div>
-        <h3 id="chip-t" style="height:30px; margin-bottom:10px;"></h3>
+        <h3 id="chip-t" style="height:30px;"></h3>
         <button class="btn-m" onclick="activateChip()">АКТИВИРОВАТЬ</button>
         <div style="margin-top:15px; text-decoration:underline; font-size:13px;" onclick="toApp()">ВОЙТИ БЕЗ ЧИПА</div>
     </div>
@@ -92,6 +96,8 @@
         <header>BSMLH</header>
         <div class="content">
             <div id="view-chat"></div>
+            <div id="view-maps" style="display:none; height:100%;"><iframe src="https://maps.google.com/maps?output=embed" style="width:100%; height:100%; border:0;"></iframe></div>
+            
             <div id="view-hub" style="display:none;" class="hub-wrap">
                 <div class="patent-tile" onclick="openPatent()">🛠 ПАТЕНТНАЯ МАСТЕРСКАЯ</div>
                 <div class="hub-grid">
@@ -101,6 +107,7 @@
                     <div class="hub-tile" onclick="window.open('https://google.com')">🔎 SEARCH</div>
                 </div>
             </div>
+
             <div id="view-prof" style="display:none;">
                 <div class="wc-header">
                     <img id="user-photo" src="" alt="">
@@ -115,6 +122,7 @@
         </div>
         <footer>
             <div id="n-chat" class="n-btn on" onclick="tab('chat')">CHAT</div>
+            <div id="n-maps" class="n-btn" onclick="tab('maps')">MAPS</div>
             <div id="n-hub" class="n-btn" onclick="tab('hub')">HUB</div>
             <div id="n-prof" class="n-btn" onclick="tab('prof')">PROFILE</div>
         </footer>
@@ -169,18 +177,17 @@
 
         function loadChats() {
             const l = document.getElementById('view-chat');
-            l.innerHTML = `
-                <div style="display:flex; padding:15px; border-bottom:1px solid #ddd; align-items:center; background:#f0f7f2;">
-                    <div style="width:45px; height:45px; background:#fff; border-radius:8px; margin-right:12px; display:flex; align-items:center; justify-content:center;">🤖</div>
-                    <div><h4>BSMLH Bot</h4><p style="font-size:12px; color:#888;">System active</p></div>
-                </div>`;
+            const u = [{n:"Alex",a:"🤖"},{n:"Sarah",a:"🎨"},{n:"Ahmed",a:"🌙"},{n:"Li",a:"🐲"},{n:"Maria",a:"🧬"}];
+            l.innerHTML = u.map(x => `
+                <div class="chat-item"><div class="chat-av">${x.a}</div><div><h4>${x.n}</h4><p style="color:#88a08d; font-size:12px;">Secure connection...</p></div></div>
+            `).join('');
         }
 
         function openMod(id) { document.getElementById(id).style.display = 'flex'; }
         function openPatent() { const i = prompt("Идея:"); if(i) alert("Сохранено!"); }
 
         function tab(t) {
-            ['chat','hub','prof'].forEach(id => {
+            ['chat','maps','hub','prof'].forEach(id => {
                 document.getElementById('view-'+id).style.display = (id===t?'block':'none');
                 document.getElementById('n-'+id).classList.toggle('on', id===t);
             });

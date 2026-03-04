@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BSMLH v8.1 | Fixed & Fast</title>
+    <title>BSMLH v8.2 | Full Version</title>
     <style>
         :root { --gold: #f6851b; --bg: #000; --wc-bg: #ededed; --neon: #00f2ff; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -11,31 +11,38 @@
 
         /* ЭКРАНЫ */
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; padding: 25px; background: #000; z-index: 1000; }
-        .active-screen { display: flex; } /* Только для начального экрана */
-
-        /* ГЛОБУС */
-        .globe-wrap { position: absolute; top: 20px; right: 20px; z-index: 2000; cursor: pointer; padding: 10px; font-size: 30px; }
+        .globe-wrap { position: absolute; top: 20px; right: 20px; z-index: 2000; cursor: pointer; font-size: 30px; }
         .lang-menu { position: absolute; top: 55px; right: 0; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; display: none; flex-direction: column; width: 130px; }
-        .lang-menu div { padding: 12px; text-align: center; color: #fff; border-bottom: 1px solid #333; font-size: 14px; }
+        .lang-menu div { padding: 12px; text-align: center; color: #fff; border-bottom: 1px solid #333; }
 
         /* ПРИЛОЖЕНИЕ */
         #app { display: none; height: 100vh; flex-direction: column; background: var(--wc-bg); z-index: 5000; position: absolute; inset: 0; color: #000; }
         header { height: 60px; background: #1a1a1a; color: #fff; display: flex; justify-content: center; align-items: center; font-weight: 600; }
         .content { flex: 1; overflow-y: auto; }
 
+        /* ЧАТЫ */
+        .wc-item { display: flex; align-items: center; padding: 14px 20px; background: #fff; position: relative; cursor: pointer; border-bottom: 0.5px solid #eee; }
+        .wc-av { width: 48px; height: 48px; background: #f0f0f0; border-radius: 8px; margin-right: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        
+        /* HUB */
+        .hub-wrap { padding: 15px; }
+        .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .hub-tile { background: #fff; padding: 25px 10px; border-radius: 12px; text-align: center; font-weight: bold; font-size: 12px; }
+        .patent-tile { grid-column: span 2; background: #1a1a1a; color: var(--gold); border: 1px solid var(--gold); margin-bottom: 10px; padding: 20px; border-radius: 15px; text-align: center; font-weight: bold; }
+
         /* ПРОФИЛЬ */
         .wc-header { background: #fff; padding: 40px 20px; display: flex; align-items: center; position: relative; margin-bottom: 8px; }
-        #user-photo { width: 64px; height: 64px; border-radius: 10px; margin-right: 20px; background: #f3f3f3; object-fit: cover; }
+        #user-photo { width: 64px; height: 64px; border-radius: 10px; margin-right: 20px; background: #eee; object-fit: cover; }
         .wc-group { background: #fff; margin-bottom: 8px; border-top: 0.5px solid #ddd; border-bottom: 0.5px solid #ddd; }
-        .wc-item { display: flex; align-items: center; padding: 14px 20px; position: relative; }
         .wc-text { flex: 1; font-size: 16px; color: #000; }
         .wc-icon { width: 25px; margin-right: 15px; font-size: 20px; text-align: center; }
+        .wc-arrow { color: #b2b2b2; font-size: 14px; }
 
         footer { height: 85px; padding-bottom: 25px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #ddd; background: #f7f7f7; }
         .n-btn { color: #999; font-size: 10px; font-weight: bold; text-align: center; }
         .n-btn.on { color: #07c160; }
         
-        .btn-m { background: var(--gold); color: #000; border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 300px; cursor: pointer; margin-top: 10px; }
+        .btn-m { background: var(--gold); color: #000; border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 300px; cursor: pointer; margin-top: 15px; }
         input { background:#111; border:1px solid #333; padding:16px; color:#fff; border-radius:12px; width:300px; margin-bottom:10px; outline:none; }
     </style>
 </head>
@@ -53,7 +60,7 @@
         <h2 id="reg-t" style="margin-top: 80px; margin-bottom: 20px;">РЕГИСТРАЦИЯ</h2>
         <input type="text" id="in-f" placeholder="ИМЯ">
         <input type="text" id="in-l" placeholder="ФАМИЛИЯ">
-        <button id="btn-next" class="btn-m" onclick="startCam()">ДАЛЕЕ</button>
+        <button id="btn-next" class="btn-m" onclick="goScan()">ДАЛЕЕ</button>
     </div>
 
     <div id="scr-scan" class="screen">
@@ -64,31 +71,51 @@
     <div id="scr-chip" class="screen">
         <div style="width:100px; height:100px; border:2px solid var(--neon); border-radius:20px; display:flex; align-items:center; justify-content:center; margin-bottom:30px; font-size:40px;">🛡️</div>
         <h3 id="chip-t"></h3>
-        <button id="btn-act" class="btn-m" onclick="activateChip()">АКТИВИРОВАТЬ</button>
-        <div id="btn-skip" style="margin-top:15px; text-decoration:underline; font-size:13px; cursor:pointer;" onclick="toApp()">ВОЙТИ БЕЗ ЧИПА</div>
+        <button id="btn-act" class="btn-m" onclick="activate()">АКТИВИРОВАТЬ</button>
+        <div id="btn-skip" style="margin-top:15px; text-decoration:underline; font-size:13px;" onclick="toApp()">ВОЙТИ БЕЗ ЧИПА</div>
     </div>
 
     <div id="app">
         <header>BSMLH</header>
         <div class="content">
             <div id="view-chat">
-                <div class="wc-item" style="background:#fff;"><div class="wc-icon">🤖</div><div class="wc-text"><b>System</b><p style="color:#999;font-size:12px;">Secure Line Active</p></div></div>
+                <div class="wc-item"><div class="wc-av">🤖</div><div class="wc-text"><b>System</b><p style="color:#999;font-size:12px;">Welcome to BSMLH Secure Ledger</p></div></div>
+                <div class="wc-item"><div class="wc-av">🌐</div><div class="wc-text"><b>Global News</b><p style="color:#999;font-size:12px;">Security update v8.2 deployed</p></div></div>
             </div>
-            <div id="view-maps" style="display:none; height:100%; background:#eee;"></div>
-            <div id="view-hub" style="display:none; padding:20px;">
-                <div style="background:#1a1a1a; color:var(--gold); padding:20px; border-radius:15px; text-align:center;">🛠 HUB ACTIVE</div>
+            
+            <div id="view-maps" style="display:none; height:100%;">
+                <iframe src="https://www.google.com/maps/embed" style="width:100%; height:100%; border:0;"></iframe>
             </div>
+
+            <div id="view-hub" style="display:none;" class="hub-wrap">
+                <div class="patent-tile">🛠 <span id="h-pat">ПАТЕНТНАЯ МАСТЕРСКАЯ</span></div>
+                <div class="hub-grid">
+                    <div class="hub-tile">📱 APPS</div>
+                    <div class="hub-tile">💻 PROGS</div>
+                    <div class="hub-tile">🔍 SCAN QR</div>
+                    <div class="hub-tile">🔎 SEARCH</div>
+                </div>
+            </div>
+
             <div id="view-prof" style="display:none;">
                 <div class="wc-header">
                     <img id="user-photo" src="" alt="">
-                    <div><h2 id="u-name-disp">User</h2><p style="color:#888; font-size:13px;">Hu ID: <span id="hu-id-val">...</span></p></div>
+                    <div>
+                        <h2 id="u-name-disp">User</h2>
+                        <p style="color:#888; font-size:13px;">Hu ID: <span id="hu-id-val">...</span></p>
+                    </div>
                 </div>
                 <div class="wc-group">
-                    <div class="wc-item"><span class="wc-icon">💳</span><span class="wc-text" id="p-ser">Services</span></div>
-                    <div class="wc-item"><span class="wc-icon">⚙️</span><span class="wc-text" id="p-set">Settings</span></div>
+                    <div class="wc-item"><span class="wc-icon">💳</span><span class="wc-text" id="p-ser">Services</span><span class="wc-arrow">></span></div>
+                </div>
+                <div class="wc-group">
+                    <div class="wc-item"><span class="wc-icon" style="color:orange;">📦</span><span class="wc-text" id="p-fav">Favorites</span><span class="wc-arrow">></span></div>
+                    <div class="wc-item"><span class="wc-icon" style="color:blue;">🖼️</span><span class="wc-text" id="p-mom">Moments</span><span class="wc-arrow">></span></div>
+                    <div class="wc-item"><span class="wc-icon" style="color:green;">⚙️</span><span class="wc-text" id="p-set">Settings</span><span class="wc-arrow">></span></div>
                 </div>
             </div>
         </div>
+
         <footer>
             <div id="n-chat" class="n-btn on" onclick="tab('chat')">CHAT</div>
             <div id="n-maps" class="n-btn" onclick="tab('maps')">MAPS</div>
@@ -101,10 +128,10 @@
 
     <script>
         const translations = {
-            RU: { t: "РЕГИСТРАЦИЯ", f: "ИМЯ", l: "ФАМИЛИЯ", n: "ДАЛЕЕ", p: "СДЕЛАТЬ ФОТО", a: "АКТИВИРОВАТЬ", s: "ВОЙТИ БЕЗ ЧИПА", ser: "Сервисы", set: "Настройки" },
-            EN: { t: "REGISTRATION", f: "FIRST NAME", l: "LAST NAME", n: "NEXT", p: "TAKE PHOTO", a: "ACTIVATE", s: "SKIP CHIP", ser: "Services", set: "Settings" },
-            CN: { t: "注册", f: "名字", l: "姓氏", n: "下一步", p: "拍照", a: "激活", s: "跳过", ser: "服务", set: "设置" },
-            AR: { t: "تسجيل", f: "الاسم", l: "الكنية", n: "التالي", p: "تصوير", a: "تفعيل", s: "تخطى", ser: "خدمات", set: "إعدادات" }
+            RU: { t: "РЕГИСТРАЦИЯ", f: "ИМЯ", l: "ФАМИЛИЯ", n: "ДАЛЕЕ", p: "СДЕЛАТЬ ФОТО", a: "АКТИВИРОВАТЬ", s: "ВОЙТИ БЕЗ ЧИПА", h: "ПАТЕНТНАЯ МАСТЕРСКАЯ", ser: "Сервисы", fav: "Избранное", mom: "Моменты", set: "Настройки" },
+            EN: { t: "REGISTRATION", f: "FIRST NAME", l: "LAST NAME", n: "NEXT", p: "TAKE PHOTO", a: "ACTIVATE", s: "SKIP CHIP", h: "PATENT WORKSHOP", ser: "Services", fav: "Favorites", mom: "Moments", set: "Settings" },
+            CN: { t: "注册", f: "名字", l: "姓氏", n: "下一步", p: "拍照", a: "激活", s: "跳过", h: "专利车间", ser: "服务", fav: "收藏", mom: "朋友圈", set: "设置" },
+            AR: { t: "تسجيل", f: "الاسم", l: "الكنية", n: "التالي", p: "تصوير", a: "تفعيل", s: "تخطى", h: "ورشة", ser: "خدمات", fav: "مفضلة", mom: "لحظات", set: "إعدادات" }
         };
 
         function setLang(lang) {
@@ -116,7 +143,10 @@
             document.getElementById('btn-photo').innerText = d.p;
             document.getElementById('btn-act').innerText = d.a;
             document.getElementById('btn-skip').innerText = d.s;
+            document.getElementById('h-pat').innerText = d.h;
             document.getElementById('p-ser').innerText = d.ser;
+            document.getElementById('p-fav').innerText = d.fav;
+            document.getElementById('p-mom').innerText = d.mom;
             document.getElementById('p-set').innerText = d.set;
             toggleLang();
         }
@@ -126,14 +156,12 @@
             m.style.display = (m.style.display === 'flex' ? 'none' : 'flex');
         }
 
-        async function startCam() {
+        async function goScan() {
             if(!document.getElementById('in-f').value) return;
             document.getElementById('scr-reg').style.display = 'none';
             document.getElementById('scr-scan').style.display = 'flex';
-            try {
-                const s = await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}});
-                document.getElementById('video-feed').srcObject = s;
-            } catch(e) { alert("Camera error"); }
+            const s = await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}});
+            document.getElementById('video-feed').srcObject = s;
         }
 
         function takePhoto() {
@@ -141,12 +169,12 @@
             c.width = v.videoWidth; c.height = v.videoHeight;
             c.getContext('2d').drawImage(v,0,0);
             document.getElementById('user-photo').src = c.toDataURL();
-            if(v.srcObject) v.srcObject.getTracks().forEach(t => t.stop());
+            v.srcObject.getTracks().forEach(t => t.stop());
             document.getElementById('scr-scan').style.display = 'none';
             document.getElementById('scr-chip').style.display = 'flex';
         }
 
-        function activateChip() {
+        function activate() {
             document.getElementById('chip-t').innerText = "WAITING...";
             setTimeout(toApp, 1500);
         }

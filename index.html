@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BSMLH v7.9 | Stable Build</title>
+    <title>BSMLH v8.0 | Full Recovery</title>
     <style>
         :root { --gold: #f6851b; --bg: #000; --wc-bg: #ededed; --neon: #00f2ff; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -18,7 +18,7 @@
         /* ЭКРАНЫ */
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; padding: 25px; background: #000; z-index: 1000; }
         .active { display: flex; }
-        .globe-wrap { position: absolute; top: 20px; right: 20px; z-index: 2000; cursor: pointer; }
+        .globe-wrap { position: absolute; top: 20px; right: 20px; z-index: 2000; cursor: pointer; padding: 5px; }
         .lang-menu { position: absolute; top: 45px; right: 0; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; display: none; flex-direction: column; width: 120px; }
         .lang-menu div { padding: 12px; text-align: center; color: #fff; border-bottom: 1px solid #333; font-size: 14px; }
 
@@ -30,16 +30,27 @@
         /* ПРОФИЛЬ (WECHAT STYLE) */
         .wc-header { background: #fff; padding: 40px 20px; display: flex; align-items: center; position: relative; margin-bottom: 8px; }
         #user-photo { width: 64px; height: 64px; border-radius: 10px; margin-right: 20px; background: #f3f3f3; object-fit: cover; }
+        .u-info h2 { font-size: 20px; margin-bottom: 4px; }
+        .u-info p { color: #888; font-size: 13px; }
+        .qr-mini { position: absolute; right: 25px; font-size: 20px; color: #888; }
+
         .wc-group { background: #fff; margin-bottom: 8px; border-top: 0.5px solid #ddd; border-bottom: 0.5px solid #ddd; }
         .wc-item { display: flex; align-items: center; padding: 14px 20px; position: relative; cursor: pointer; }
         .wc-item:not(:last-child)::after { content: ''; position: absolute; left: 55px; right: 0; bottom: 0; height: 0.5px; background: #eee; }
         .wc-text { flex: 1; font-size: 16px; color: #000; }
         .wc-arrow { color: #b2b2b2; font-size: 14px; }
+        .wc-icon { width: 25px; margin-right: 15px; font-size: 20px; text-align: center; }
+
+        /* HUB */
+        .hub-wrap { padding: 15px; }
+        .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .hub-tile { background: #fff; padding: 25px 10px; border-radius: 12px; text-align: center; font-weight: bold; font-size: 12px; border: 1px solid #eee; }
+        .patent-tile { grid-column: span 2; background: #1a1a1a; color: var(--gold); border: 1px solid var(--gold); margin-bottom: 10px; padding: 20px; border-radius: 15px; text-align: center; font-weight: bold; }
 
         footer { height: 85px; padding-bottom: 25px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #ddd; background: #f7f7f7; }
-        .n-btn { color: #999; font-size: 10px; font-weight: bold; }
+        .n-btn { color: #999; font-size: 10px; font-weight: bold; text-align: center; }
         .n-btn.on { color: #07c160; }
-        .btn-m { background: var(--gold); color: #000; border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 100%; max-width: 300px; cursor: pointer; margin-top: 10px; }
+        .btn-m { background: var(--gold); color: #000; border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 300px; cursor: pointer; margin-top: 10px; }
         input { background:#111; border:1px solid #333; padding:16px; color:#fff; border-radius:12px; width:300px; margin-bottom:10px; outline:none; }
     </style>
 </head>
@@ -51,7 +62,7 @@
     </div>
 
     <div id="scr-reg" class="screen active">
-        <div class="globe-wrap" onclick="toggleLang()"><div style="font-size:30px;">🌐</div>
+        <div class="globe-wrap" onclick="toggleLang()">🌐
             <div id="l-menu" class="lang-menu">
                 <div onclick="setLang('RU')">Русский</div>
                 <div onclick="setLang('EN')">English</div>
@@ -71,7 +82,7 @@
     </div>
 
     <div id="scr-chip" class="screen">
-        <div style="width:100px; height:100px; border:2px solid var(--neon); border-radius:20px; display:flex; align-items:center; justify-content:center; margin-bottom:30px; position:relative;">🛡️</div>
+        <div style="width:100px; height:100px; border:2px solid var(--neon); border-radius:20px; display:flex; align-items:center; justify-content:center; margin-bottom:30px; font-size:40px;">🛡️</div>
         <h3 id="chip-t" style="height:30px;"></h3>
         <button id="btn-act" class="btn-m" onclick="activateChip()">АКТИВИРОВАТЬ</button>
         <div id="btn-skip" style="margin-top:15px; text-decoration:underline; font-size:13px;" onclick="toApp()">ВОЙТИ БЕЗ ЧИПА</div>
@@ -81,21 +92,46 @@
         <header>BSMLH</header>
         <div class="content">
             <div id="view-chat"></div>
+            
+            <div id="view-maps" style="display:none; height:100%;">
+                <iframe src="https://maps.google.com/maps?output=embed" style="width:100%; height:100%; border:0;"></iframe>
+            </div>
+
+            <div id="view-hub" style="display:none;" class="hub-wrap">
+                <div class="patent-tile" onclick="alert('Saved!')">🛠 <span id="h-pat">ПАТЕНТНАЯ МАСТЕРСКАЯ</span></div>
+                <div class="hub-grid">
+                    <div class="hub-tile" onclick="window.open('https://play.google.com')">📱 APPS</div>
+                    <div class="hub-tile">💻 PROGS</div>
+                    <div class="hub-tile">🔍 SCAN QR</div>
+                    <div class="hub-tile" onclick="window.open('https://google.com')">🔎 SEARCH</div>
+                </div>
+            </div>
+
             <div id="view-prof" style="display:none;">
                 <div class="wc-header">
                     <img id="user-photo" src="" alt="">
                     <div class="u-info">
                         <h2 id="u-name-disp">User</h2>
-                        <p style="color:#888; font-size:13px;">Hu ID: <span id="hu-id-display">...</span></p>
+                        <p>Hu ID: <span id="hu-id-display">...</span></p>
                     </div>
+                    <div class="qr-mini">🔳</div>
                 </div>
                 <div class="wc-group">
-                    <div class="wc-item"><span class="wc-text">Settings</span><span class="wc-arrow">></span></div>
+                    <div class="wc-item"><span class="wc-icon">💳</span><span class="wc-text" id="p-ser">Services</span><span class="wc-arrow">></span></div>
+                </div>
+                <div class="wc-group">
+                    <div class="wc-item"><span class="wc-icon" style="color:orange;">📦</span><span class="wc-text" id="p-fav">Favorites</span><span class="wc-arrow">></span></div>
+                    <div class="wc-item"><span class="wc-icon" style="color:blue;">🖼️</span><span class="wc-text" id="p-mom">Moments</span><span class="wc-arrow">></span></div>
+                </div>
+                <div class="wc-group">
+                    <div class="wc-item"><span class="wc-icon" style="color:green;">⚙️</span><span class="wc-text" id="p-set">Settings</span><span class="wc-arrow">></span></div>
                 </div>
             </div>
         </div>
         <footer>
             <div id="n-chat" class="n-btn on" onclick="tab('chat')">CHAT</div>
+            <div id="n-maps" class="n-btn" onclick="tab('maps')">MAPS</div>
+            <div id="n-hub" class="n-btn" onclick="tab('hub')">HUB</div>
             <div id="n-prof" class="n-btn" onclick="tab('prof')">PROFILE</div>
         </footer>
     </div>
@@ -104,10 +140,10 @@
 
     <script>
         const translations = {
-            RU: { t: "РЕГИСТРАЦИЯ", f: "ИМЯ", l: "ФАМИЛИЯ", n: "ДАЛЕЕ", p: "СДЕЛАТЬ ФОТО", a: "АКТИВИРОВАТЬ", s: "ВОЙТИ БЕЗ ЧИПА" },
-            EN: { t: "REGISTRATION", f: "FIRST NAME", l: "LAST NAME", n: "NEXT", p: "TAKE PHOTO", a: "ACTIVATE", s: "SKIP CHIP" },
-            CN: { t: "注册", f: "名字", l: "姓氏", n: "下一步", p: "拍照", a: "激活", s: "跳过芯片" },
-            AR: { t: "تسجيل", f: "الاسم الأول", l: "الكنية", n: "التالي", p: "تصوير", a: "تفعيل", s: "تخطى" }
+            RU: { t: "РЕГИСТРАЦИЯ", f: "ИМЯ", l: "ФАМИЛИЯ", n: "ДАЛЕЕ", p: "СДЕЛАТЬ ФОТО", a: "АКТИВИРОВАТЬ", s: "ВОЙТИ БЕЗ ЧИПА", h_p: "ПАТЕНТНАЯ МАСТЕРСКАЯ", p_s: "Сервисы", p_f: "Избранное", p_m: "Моменты", p_set: "Настройки" },
+            EN: { t: "REGISTRATION", f: "FIRST NAME", l: "LAST NAME", n: "NEXT", p: "TAKE PHOTO", a: "ACTIVATE", s: "SKIP CHIP", h_p: "PATENT WORKSHOP", p_s: "Services", p_f: "Favorites", p_m: "Moments", p_set: "Settings" },
+            CN: { t: "注册", f: "名字", l: "姓氏", n: "下一步", p: "拍照", a: "激活", s: "跳过", h_p: "专利车间", p_s: "服务", p_f: "收藏", p_m: "朋友圈", p_set: "设置" },
+            AR: { t: "تسجيل", f: "الاسم", l: "الكنية", n: "التالي", p: "تصوير", a: "تفعيل", s: "تخطى", h_p: "ورشة", p_s: "خدمات", p_f: "مفضلة", p_m: "لحظات", p_set: "إعدادات" }
         };
 
         function setLang(lang) {
@@ -119,6 +155,11 @@
             document.getElementById('btn-photo').innerText = d.p;
             document.getElementById('btn-act').innerText = d.a;
             document.getElementById('btn-skip').innerText = d.s;
+            document.getElementById('h-pat').innerText = d.h_p;
+            document.getElementById('p-ser').innerText = d.p_s;
+            document.getElementById('p-fav').innerText = d.p_f;
+            document.getElementById('p-mom').innerText = d.p_m;
+            document.getElementById('p-set').innerText = d.p_set;
             toggleLang();
         }
 
@@ -126,8 +167,8 @@
 
         async function startCam() {
             if(!document.getElementById('in-f').value) return;
-            document.getElementById('scr-reg').classList.remove('active');
-            document.getElementById('scr-scan').classList.add('active');
+            document.getElementById('scr-reg').style.display='none';
+            document.getElementById('scr-scan').style.display='flex';
             const s = await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}});
             document.getElementById('video-feed').srcObject = s;
         }
@@ -138,25 +179,30 @@
             c.getContext('2d').drawImage(v,0,0);
             document.getElementById('user-photo').src = c.toDataURL();
             v.srcObject.getTracks().forEach(t => t.stop());
-            document.getElementById('scr-scan').classList.remove('active');
-            document.getElementById('scr-chip').classList.add('active');
+            document.getElementById('scr-scan').style.display='none';
+            document.getElementById('scr-chip').style.display='flex';
         }
 
         function activateChip() { document.getElementById('chip-t').innerText="WAITING..."; setTimeout(toApp, 1500); }
 
         function toApp() {
-            const full = document.getElementById('in-f').value + " " + document.getElementById('in-l').value;
-            document.getElementById('u-name-disp').innerText = full;
+            document.getElementById('u-name-disp').innerText = document.getElementById('in-f').value + " " + document.getElementById('in-l').value;
             document.getElementById('hu-id-display').innerText = "HU-" + Math.random().toString(36).substr(2, 12).toUpperCase();
-            document.getElementById('scr-chip').classList.remove('active');
+            document.getElementById('scr-chip').style.display='none';
             document.getElementById('app').style.display = 'flex';
+            loadChats();
+        }
+
+        function loadChats() {
+            const l = document.getElementById('view-chat');
+            l.innerHTML = <div class="wc-item" style="background:#fff;"><div class="wc-icon">🤖</div><div class="wc-text"><b>System</b><p style="font-size:12px;color:#999;">Welcome to BSMLH</p></div></div>;
         }
 
         function tab(t) {
-            document.getElementById('view-chat').style.display = (t==='chat'?'block':'none');
-            document.getElementById('view-prof').style.display = (t==='prof'?'block':'none');
-            document.getElementById('n-chat').classList.toggle('on', t==='chat');
-            document.getElementById('n-prof').classList.toggle('on', t==='prof');
+            ['chat','maps','hub','prof'].forEach(id => {
+                document.getElementById('view-'+id).style.display = (id===t?'block':'none');
+                document.getElementById('n-'+id).classList.toggle('on', id===t);
+            });
         }
     </script>
 </body>

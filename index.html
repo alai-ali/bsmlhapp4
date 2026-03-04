@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BSMLH v7.2 | Step by Step</title>
+    <title>BSMLH v7.3 | Functional Update</title>
     <style>
         :root { --gold: #f6851b; --bg: #000; --wc-bg: #f0f7f2; --blue: #007aff; --neon: #00f2ff; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: #000; color: #fff; height: 100vh; overflow: hidden; position: fixed; width: 100%; }
 
-        /* ЗАСТАВКА (БЕЗ ИЗМЕНЕНИЙ) */
+        /* ЗАСТАВКА */
         #splash { position: fixed; inset: 0; z-index: 9999; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; animation: fadeOut 0.5s forwards 2.5s; pointer-events: none; }
         @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
         .s-title { font-size: 50px; font-weight: 900; letter-spacing: 12px; color: #fff; }
@@ -37,28 +37,35 @@
         /* HUB */
         .hub-wrap { padding: 15px; }
         .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .hub-tile { background: #fff; padding: 25px 10px; border-radius: 12px; text-align: center; font-weight: bold; font-size: 12px; border: 1px solid #eee; }
+        .hub-tile { background: #fff; padding: 25px 10px; border-radius: 12px; text-align: center; font-weight: bold; font-size: 12px; border: 1px solid #eee; cursor: pointer; }
         .patent-tile { grid-column: span 2; background: #1a1a1a; color: var(--gold); border: 1px solid var(--gold); margin-bottom: 10px; padding: 20px; border-radius: 15px; text-align: center; font-weight: bold; }
 
-        /* ПРОФИЛЬ (WECHAT STYLE) */
-        .wc-header { background: #fff; padding: 30px 20px; display: flex; align-items: center; margin-bottom: 10px; }
+        /* ПРОФИЛЬ */
+        .wc-header { background: #fff; padding: 30px 20px; display: flex; align-items: center; margin-bottom: 10px; position: relative; }
         #user-photo { width: 64px; height: 64px; border-radius: 8px; margin-right: 15px; background: #eee; object-fit: cover; }
+        .qr-mini { position: absolute; right: 25px; top: 50%; transform: translateY(-50%); font-size: 24px; cursor: pointer; opacity: 0.7; }
         .wc-group { margin-bottom: 10px; background: #fff; }
         .wc-item { padding: 15px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+
+        /* МОДАЛЬНЫЕ ОКНА */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 8000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: #fff; width: 90%; max-width: 320px; padding: 20px; border-radius: 20px; text-align: center; }
+        
+        .prog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 10px; }
+        .prog-icon { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #333; text-decoration: none; }
+        .prog-icon img { width: 50px; height: 50px; border-radius: 12px; margin-bottom: 5px; }
+
+        .qr-big { width: 200px; height: 200px; margin: 20px auto; background: #eee; display: flex; align-items: center; justify-content: center; border: 10px solid #fff; }
 
         footer { height: 85px; padding-bottom: 25px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #ddd; background: #f7f7f7; }
         .n-btn { color: #999; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         .n-btn.on { color: #07c160; }
         .btn-m { background: var(--gold); color: #000; border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 100%; max-width: 300px; cursor: pointer; }
-        .btn-skip { background: #1a1a1a; color: #fff; padding: 15px; border-radius: 12px; width: 100%; max-width: 300px; text-align: center; margin-top: 10px; border: 1px solid #333; font-size: 13px; }
     </style>
 </head>
 <body>
 
-    <div id="splash">
-        <div class="s-title">BSMLH</div>
-        <div class="s-sub">BIOMETRIC SECURITY MULTIFUNCTION LEDGER FOR HUMANITY</div>
-    </div>
+    <div id="splash"><div class="s-title">BSMLH</div><div class="s-sub">BIOMETRIC SECURITY MULTIFUNCTION LEDGER</div></div>
 
     <div id="scr-reg" class="screen active">
         <h2 style="margin-top: 80px; margin-bottom: 20px;">РЕГИСТРАЦИЯ</h2>
@@ -75,7 +82,7 @@
         <div class="cyber-box"><div class="line"></div></div>
         <h3 id="chip-t" style="height:30px;"></h3>
         <button class="btn-m" onclick="activateChip()">АКТИВИРОВАТЬ</button>
-        <div class="btn-skip" onclick="toApp()">ВОЙТИ БЕЗ ЧИПА</div>
+        <div style="margin-top:15px; text-decoration:underline;" onclick="toApp()">ВОЙТИ БЕЗ ЧИПА</div>
     </div>
 
     <div id="app">
@@ -88,9 +95,9 @@
                 <div class="patent-tile" onclick="openPatent()">🛠 ПАТЕНТНАЯ МАСТЕРСКАЯ</div>
                 <div class="hub-grid">
                     <div class="hub-tile" onclick="window.open('https://play.google.com')">📱 APPS</div>
-                    <div class="hub-tile" onclick="showProgs()">💻 PROGS</div>
-                    <div class="hub-tile" onclick="alert('Запуск SCAN QR...')">🔍 SCAN QR</div>
-                    <div class="hub-tile">🔎 SEARCH</div>
+                    <div class="hub-tile" onclick="openModal('modal-progs')">💻 PROGS</div>
+                    <div class="hub-tile" onclick="openModal('modal-scan')">🔍 SCAN QR</div>
+                    <div class="hub-tile" onclick="window.open('https://www.google.com')">🔎 SEARCH</div>
                 </div>
             </div>
 
@@ -98,22 +105,16 @@
                 <div class="wc-header">
                     <img id="user-photo" src="" alt="">
                     <div><h2 id="u-name-disp">User</h2><p style="color:#999; font-size:13px;">ID: bsmlh_7701</p></div>
+                    <div class="qr-mini" onclick="openModal('modal-my-qr')">🔳</div>
                 </div>
                 <div class="wc-group">
                     <div class="wc-item"><span>💳 Services</span><span>></span></div>
-                </div>
-                <div class="wc-group">
                     <div class="wc-item"><span>📦 Favorites</span><span>></span></div>
                     <div class="wc-item"><span>🖼️ My Posts</span><span>></span></div>
-                    <div class="wc-item"><span>🧧 Cards & Offers</span><span>></span></div>
-                    <div class="wc-item"><span>😀 Stickers</span><span>></span></div>
-                </div>
-                <div class="wc-group">
                     <div class="wc-item"><span>⚙️ Settings</span><span>></span></div>
                 </div>
             </div>
         </div>
-
         <footer>
             <div id="n-chat" class="n-btn on" onclick="tab('chat')">CHAT</div>
             <div id="n-maps" class="n-btn" onclick="tab('maps')">MAPS</div>
@@ -122,57 +123,91 @@
         </footer>
     </div>
 
+    <div id="modal-progs" class="modal" onclick="closeModal(this)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 style="margin-bottom:15px; color:#000;">Programs</h3>
+            <div class="prog-grid">
+                <a href="https://wa.me/" target="_blank" class="prog-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">WhatsApp
+                </a>
+                <a href="https://t.me/" target="_blank" class="prog-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="TG">Telegram
+                </a>
+                <a href="#" class="prog-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/WeChat_logo.svg" alt="WC">WeChat
+                </a>
+                <a href="viber://chat" class="prog-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5a/Viber_logo_2018.svg" alt="VB">Viber
+                </a>
+                <a href="https://youtube.com" target="_blank" class="prog-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YT">YouTube
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-my-qr" class="modal" onclick="closeModal(this)">
+        <div class="modal-content">
+            <h3 style="color:#000;">My QR Code</h3>
+            <div class="qr-big">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=BSMLH_USER" alt="QR">
+            </div>
+            <p style="color:#666; font-size:12px;">Scan to add me as friend</p>
+        </div>
+    </div>
+
+    <div id="modal-scan" class="modal" onclick="closeModal(this)">
+        <div style="width:250px; height:250px; border:2px solid var(--neon); position:relative; display:flex; align-items:center; justify-content:center;">
+             <div class="line"></div>
+             <p style="color:#fff; position:absolute; bottom:-40px; width:100%; text-align:center;">SCANNING...</p>
+        </div>
+    </div>
+
     <canvas id="photo-canvas" style="display:none;"></canvas>
 
     <script>
+        // ЛОГИКА КАМЕРЫ И ВХОДА
         async function startCam() {
             if(!document.getElementById('in-f').value) return;
             document.getElementById('scr-reg').classList.remove('active');
             document.getElementById('scr-scan').classList.add('active');
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-            document.getElementById('video-feed').srcObject = stream;
+            const s = await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}});
+            document.getElementById('video-feed').srcObject = s;
         }
-
         function takePhoto() {
             const v = document.getElementById('video-feed');
             const c = document.getElementById('photo-canvas');
             c.width = v.videoWidth; c.height = v.videoHeight;
-            c.getContext('2d').drawImage(v, 0, 0);
-            document.getElementById('user-photo').src = c.toDataURL('image/png');
+            c.getContext('2d').drawImage(v,0,0);
+            document.getElementById('user-photo').src = c.toDataURL();
             v.srcObject.getTracks().forEach(t => t.stop());
             document.getElementById('scr-scan').classList.remove('active');
             document.getElementById('scr-chip').classList.add('active');
         }
-
         function activateChip() {
             document.getElementById('chip-t').innerText = "ОЖИДАНИЕ ЧИПА...";
             setTimeout(toApp, 2000);
         }
-
         function toApp() {
             document.getElementById('u-name-disp').innerText = document.getElementById('in-f').value;
             document.getElementById('scr-chip').classList.remove('active');
             document.getElementById('app').style.display = 'flex';
-            const list = document.getElementById('view-chat');
-            const users = [{n:"Alex",a:"🤖"},{n:"Sarah",a:"🎨"},{n:"Ahmed",a:"🌙"},{n:"Li",a:"🐲"},{n:"Maria",a:"🧬"}];
-            list.innerHTML = users.map(u => `
-                <div class="chat-item"><div class="chat-av">${u.a}</div><div class="chat-info"><h4>${u.n}</h4><p>Secure message...</p></div></div>
-            `).join('');
+            loadChats();
+        }
+        function loadChats() {
+            const l = document.getElementById('view-chat');
+            const u = [{n:"Alex",a:"🤖"},{n:"Sarah",a:"🎨"},{n:"Ahmed",a:"🌙"},{n:"Li",a:"🐲"}];
+            l.innerHTML = u.map(x => <div class="chat-item"><div class="chat-av">${x.a}</div><div><h4>${x.n}</h4><p style="color:#88a08d; font-size:12px;">Active</p></div></div>).join('');
         }
 
-        function showProgs() {
-            alert("PROGRAMS:\n1. WhatsApp\n2. Telegram\n3. WeChat\n4. Viber\n5. YouTube");
-        }
-
-        function openPatent() {
-            const idea = prompt("Опишите идею:");
-            if(idea) alert("Патент зафиксирован!");
-        }
-
+        // МОДАЛКИ И ТАБЫ
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(el) { el.style.display = 'none'; }
+        function openPatent() { const i = prompt("Идея:"); if(i) alert("Сохранено!"); }
         function tab(t) {
-            ['chat', 'maps', 'hub', 'prof'].forEach(id => {
-                document.getElementById('view-' + id).style.display = (id === t ? 'block' : 'none');
-                document.getElementById('n-' + id).classList.toggle('on', id === t);
+            ['chat','maps','hub','prof'].forEach(id => {
+                document.getElementById('view-'+id).style.display = (id===t?'block':'none');
+                document.getElementById('n-'+id).classList.toggle('on', id===t);
             });
         }
     </script>

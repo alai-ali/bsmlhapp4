@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BSMLH v7.8 | Ultra Stable</title>
+    <title>BSMLH v7.9 | Stable Build</title>
     <style>
         :root { --gold: #f6851b; --bg: #000; --wc-bg: #ededed; --neon: #00f2ff; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -13,20 +13,14 @@
         #splash { position: fixed; inset: 0; z-index: 9999; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; animation: fadeOut 0.5s forwards 2.5s; pointer-events: none; }
         @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
         .s-title { font-size: 50px; font-weight: 900; letter-spacing: 12px; color: #fff; }
-        .s-sub { font-size: 10px; color: #fff; margin-top: 15px; text-align: center; text-transform: uppercase; }
+        .s-sub { font-size: 10px; color: #fff; margin-top: 15px; text-align: center; max-width: 80%; text-transform: uppercase; letter-spacing: 1px; }
 
         /* ЭКРАНЫ */
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; padding: 25px; background: #000; z-index: 1000; }
         .active { display: flex; }
-
-        /* ГЛОБУС */
-        .globe-wrap { position: absolute; top: 20px; right: 20px; z-index: 2000; cursor: pointer; padding: 10px; }
-        .lang-menu { position: absolute; top: 55px; right: 0; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; display: none; flex-direction: column; width: 130px; }
-        .lang-menu div { padding: 12px; text-align: center; color: #fff; border-bottom: 1px solid #333; }
-
-        /* КАРТИНКА ЧИПА */
-        .chip-container { width: 220px; height: 220px; background: #111; border-radius: 20px; overflow: hidden; margin-bottom: 20px; border: 1px solid var(--gold); }
-        .chip-img { width: 100%; height: 100%; object-fit: cover; }
+        .globe-wrap { position: absolute; top: 20px; right: 20px; z-index: 2000; cursor: pointer; }
+        .lang-menu { position: absolute; top: 45px; right: 0; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; display: none; flex-direction: column; width: 120px; }
+        .lang-menu div { padding: 12px; text-align: center; color: #fff; border-bottom: 1px solid #333; font-size: 14px; }
 
         /* ПРИЛОЖЕНИЕ */
         #app { display: none; height: 100vh; flex-direction: column; background: var(--wc-bg); z-index: 5000; position: absolute; inset: 0; color: #000; }
@@ -36,21 +30,17 @@
         /* ПРОФИЛЬ (WECHAT STYLE) */
         .wc-header { background: #fff; padding: 40px 20px; display: flex; align-items: center; position: relative; margin-bottom: 8px; }
         #user-photo { width: 64px; height: 64px; border-radius: 10px; margin-right: 20px; background: #f3f3f3; object-fit: cover; }
-        .qr-icon-btn { position: absolute; right: 25px; width: 24px; opacity: 0.5; }
-
         .wc-group { background: #fff; margin-bottom: 8px; border-top: 0.5px solid #ddd; border-bottom: 0.5px solid #ddd; }
         .wc-item { display: flex; align-items: center; padding: 14px 20px; position: relative; cursor: pointer; }
         .wc-item:not(:last-child)::after { content: ''; position: absolute; left: 55px; right: 0; bottom: 0; height: 0.5px; background: #eee; }
-        .wc-text { flex: 1; font-size: 16px; }
-        .wc-arrow { color: #b2b2b2; }
+        .wc-text { flex: 1; font-size: 16px; color: #000; }
+        .wc-arrow { color: #b2b2b2; font-size: 14px; }
 
-        /* ФУТЕР */
         footer { height: 85px; padding-bottom: 25px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #ddd; background: #f7f7f7; }
         .n-btn { color: #999; font-size: 10px; font-weight: bold; }
         .n-btn.on { color: #07c160; }
-        .btn-m { background: var(--gold); color: #000; border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 100%; max-width: 300px; }
-
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 8000; flex-direction: column; }
+        .btn-m { background: var(--gold); color: #000; border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 100%; max-width: 300px; cursor: pointer; margin-top: 10px; }
+        input { background:#111; border:1px solid #333; padding:16px; color:#fff; border-radius:12px; width:300px; margin-bottom:10px; outline:none; }
     </style>
 </head>
 <body>
@@ -61,7 +51,7 @@
     </div>
 
     <div id="scr-reg" class="screen active">
-        <div class="globe-wrap" onclick="toggleLang()">🌐
+        <div class="globe-wrap" onclick="toggleLang()"><div style="font-size:30px;">🌐</div>
             <div id="l-menu" class="lang-menu">
                 <div onclick="setLang('RU')">Русский</div>
                 <div onclick="setLang('EN')">English</div>
@@ -69,100 +59,75 @@
                 <div onclick="setLang('AR')">العربية</div>
             </div>
         </div>
-        <h2 id="t-reg" style="margin-top: 80px; margin-bottom: 20px;">РЕГИСТРАЦИЯ</h2>
-        <input type="text" id="in-f" placeholder="ИМЯ" style="background:#111; border:1px solid #333; padding:16px; color:#fff; border-radius:12px; width:300px; margin-bottom:15px; outline:none;">
-        <button id="b-next" class="btn-m" onclick="startCam()">ДАЛЕЕ</button>
+        <h2 id="reg-t" style="margin-top: 80px; margin-bottom: 20px;">РЕГИСТРАЦИЯ</h2>
+        <input type="text" id="in-f" placeholder="ИМЯ">
+        <input type="text" id="in-l" placeholder="ФАМИЛИЯ">
+        <button id="btn-next" class="btn-m" onclick="startCam()">ДАЛЕЕ</button>
     </div>
 
     <div id="scr-scan" class="screen">
         <video id="video-feed" autoplay playsinline style="width:260px; height:260px; border-radius:50%; object-fit:cover; border:3px solid var(--gold); transform: scaleX(-1);"></video>
-        <button id="b-photo" class="btn-m" style="margin-top:30px;" onclick="takePhoto()">СДЕЛАТЬ ФОТО</button>
+        <button id="btn-photo" class="btn-m" style="margin-top:30px;" onclick="takePhoto()">СДЕЛАТЬ ФОТО</button>
     </div>
 
     <div id="scr-chip" class="screen">
-        <div class="chip-container">
-            <img src="https://i.ibb.co/Vp8p6mN/image.png" class="chip-img" onerror="this.style.display='none'">
-        </div>
-        <h3 id="t-chip-status" style="height:30px; margin-bottom:10px;"></h3>
-        <button id="b-act" class="btn-m" onclick="activateChip()">АКТИВИРОВАТЬ</button>
-        <div id="t-skip" style="margin-top:15px; text-decoration:underline; font-size:13px;" onclick="toApp()">ВОЙТИ БЕЗ ЧИПА</div>
+        <div style="width:100px; height:100px; border:2px solid var(--neon); border-radius:20px; display:flex; align-items:center; justify-content:center; margin-bottom:30px; position:relative;">🛡️</div>
+        <h3 id="chip-t" style="height:30px;"></h3>
+        <button id="btn-act" class="btn-m" onclick="activateChip()">АКТИВИРОВАТЬ</button>
+        <div id="btn-skip" style="margin-top:15px; text-decoration:underline; font-size:13px;" onclick="toApp()">ВОЙТИ БЕЗ ЧИПА</div>
     </div>
 
     <div id="app">
         <header>BSMLH</header>
         <div class="content">
             <div id="view-chat"></div>
-            <div id="view-maps" style="display:none; height:100%;"><iframe src="about:blank" style="width:100%; height:100%; border:0;"></iframe></div>
-            <div id="view-hub" style="display:none; padding:15px;">
-                <div style="background:#1a1a1a; color:var(--gold); padding:20px; border-radius:15px; text-align:center; font-weight:bold; margin-bottom:10px;">🛠 PATENT</div>
-            </div>
-
             <div id="view-prof" style="display:none;">
                 <div class="wc-header">
                     <img id="user-photo" src="" alt="">
-                    <div><h2 id="u-name-disp">User</h2><p style="color:#888; font-size:13px;">Hu ID: <span id="hu-id-val">...</span></p></div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/747/747475.png" class="qr-icon-btn" onclick="openMod('m-qr')">
+                    <div class="u-info">
+                        <h2 id="u-name-disp">User</h2>
+                        <p style="color:#888; font-size:13px;">Hu ID: <span id="hu-id-display">...</span></p>
+                    </div>
                 </div>
                 <div class="wc-group">
-                    <div class="wc-item"><span class="wc-text" id="p-ser">Services</span><span class="wc-arrow">></span></div>
-                </div>
-                <div class="wc-group">
-                    <div class="wc-item"><span class="wc-text" id="p-fav">Favorites</span><span class="wc-arrow">></span></div>
-                    <div class="wc-item" onclick="openMod('m-set')"><span class="wc-text" id="p-set">Settings</span><span class="wc-arrow">></span></div>
+                    <div class="wc-item"><span class="wc-text">Settings</span><span class="wc-arrow">></span></div>
                 </div>
             </div>
         </div>
         <footer>
             <div id="n-chat" class="n-btn on" onclick="tab('chat')">CHAT</div>
-            <div id="n-maps" class="n-btn" onclick="tab('maps')">MAPS</div>
-            <div id="n-hub" class="n-btn" onclick="tab('hub')">HUB</div>
             <div id="n-prof" class="n-btn" onclick="tab('prof')">PROFILE</div>
         </footer>
-    </div>
-
-    <div id="m-set" class="modal">
-        <header style="background:#fff; color:#000;"><span onclick="closeMod('m-set')" style="position:absolute; left:20px;">✕</span><span id="s-title">Settings</span></header>
-        <div style="padding-top:15px;">
-            <div class="wc-group"><div class="wc-item"><span class="wc-text" id="s-acc">Account Security</span><span class="wc-arrow">></span></div></div>
-            <div class="wc-group"><div class="wc-item" style="justify-content:center;" onclick="location.reload()" id="s-out">Log Out</div></div>
-        </div>
-    </div>
-
-    <div id="m-qr" class="modal" onclick="closeMod('m-qr')" style="justify-content:center; align-items:center;">
-        <div style="background:#fff; padding:20px; border-radius:15px;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=BSMLH"></div>
     </div>
 
     <canvas id="photo-canvas" style="display:none;"></canvas>
 
     <script>
-        const langs = {
-            RU: {reg:"РЕГИСТРАЦИЯ", next:"ДАЛЕЕ", photo:"СДЕЛАТЬ ФОТО", act:"АКТИВИРОВАТЬ", wait:"ОЖИДАНИЕ...", skip:"ВОЙТИ БЕЗ ЧИПА", ser:"Сервисы", fav:"Избранное", set:"Настройки", out:"Выйти"},
-            EN: {reg:"REGISTRATION", next:"NEXT", photo:"TAKE PHOTO", act:"ACTIVATE", wait:"WAITING...", skip:"SKIP CHIP", ser:"Services", fav:"Favorites", set:"Settings", out:"Log Out"},
-            CN: {reg:"注册", next:"下一步", photo:"拍照", act:"激活", wait:"等待...", skip:"跳过", ser:"服务", fav:"收藏", set:"设置", out:"退出"},
-            AR: {reg:"تسجيل", next:"التالي", photo:"تصوير", act:"تفعيل", wait:"انتظار...", skip:"تخطى", ser:"خدمات", fav:"مفضلة", set:"إعدادات", out:"خروج"}
+        const translations = {
+            RU: { t: "РЕГИСТРАЦИЯ", f: "ИМЯ", l: "ФАМИЛИЯ", n: "ДАЛЕЕ", p: "СДЕЛАТЬ ФОТО", a: "АКТИВИРОВАТЬ", s: "ВОЙТИ БЕЗ ЧИПА" },
+            EN: { t: "REGISTRATION", f: "FIRST NAME", l: "LAST NAME", n: "NEXT", p: "TAKE PHOTO", a: "ACTIVATE", s: "SKIP CHIP" },
+            CN: { t: "注册", f: "名字", l: "姓氏", n: "下一步", p: "拍照", a: "激活", s: "跳过芯片" },
+            AR: { t: "تسجيل", f: "الاسم الأول", l: "الكنية", n: "التالي", p: "تصوير", a: "تفعيل", s: "تخطى" }
         };
 
-        function setLang(l) {
-            const d = langs[l];
-            document.getElementById('t-reg').innerText = d.reg;
-            document.getElementById('b-next').innerText = d.next;
-            document.getElementById('b-photo').innerText = d.photo;
-            document.getElementById('b-act').innerText = d.act;
-            document.getElementById('t-skip').innerText = d.skip;
-            document.getElementById('p-ser').innerText = d.ser;
-            document.getElementById('p-fav').innerText = d.fav;
-            document.getElementById('p-set').innerText = d.set;
-            document.getElementById('s-title').innerText = d.set;
-            document.getElementById('s-out').innerText = d.out;
+        function setLang(lang) {
+            const d = translations[lang];
+            document.getElementById('reg-t').innerText = d.t;
+            document.getElementById('in-f').placeholder = d.f;
+            document.getElementById('in-l').placeholder = d.l;
+            document.getElementById('btn-next').innerText = d.n;
+            document.getElementById('btn-photo').innerText = d.p;
+            document.getElementById('btn-act').innerText = d.a;
+            document.getElementById('btn-skip').innerText = d.s;
             toggleLang();
         }
 
         function toggleLang() { const m = document.getElementById('l-menu'); m.style.display = m.style.display==='flex'?'none':'flex'; }
-        
+
         async function startCam() {
             if(!document.getElementById('in-f').value) return;
-            document.getElementById('scr-reg').style.display='none';
-            document.getElementById('scr-scan').style.display='flex';
+            document.getElementById('scr-reg').classList.remove('active');
+            document.getElementById('scr-scan').classList.add('active');
             const s = await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}});
             document.getElementById('video-feed').srcObject = s;
         }
@@ -173,35 +138,25 @@
             c.getContext('2d').drawImage(v,0,0);
             document.getElementById('user-photo').src = c.toDataURL();
             v.srcObject.getTracks().forEach(t => t.stop());
-            document.getElementById('scr-scan').style.display='none';
-            document.getElementById('scr-chip').style.display='flex';
+            document.getElementById('scr-scan').classList.remove('active');
+            document.getElementById('scr-chip').classList.add('active');
         }
 
-        function activateChip() { 
-            document.getElementById('t-chip-status').innerText = "CONNECTING..."; 
-            setTimeout(toApp, 1500); 
-        }
+        function activateChip() { document.getElementById('chip-t').innerText="WAITING..."; setTimeout(toApp, 1500); }
 
         function toApp() {
-            document.getElementById('u-name-disp').innerText = document.getElementById('in-f').value;
-            document.getElementById('hu-id-val').innerText = "HU-"+Math.random().toString(36).substr(2,12).toUpperCase();
-            document.getElementById('scr-chip').style.display='none';
+            const full = document.getElementById('in-f').value + " " + document.getElementById('in-l').value;
+            document.getElementById('u-name-disp').innerText = full;
+            document.getElementById('hu-id-display').innerText = "HU-" + Math.random().toString(36).substr(2, 12).toUpperCase();
+            document.getElementById('scr-chip').classList.remove('active');
             document.getElementById('app').style.display = 'flex';
-            loadChats();
         }
 
-        function loadChats() {
-            const l = document.getElementById('view-chat');
-            l.innerHTML = <div class="wc-item" style="background:#fff;"><div style="width:48px;height:48px;background:#eee;border-radius:8px;margin-right:15px;display:flex;align-items:center;justify-content:center;">🤖</div><div><b>System</b><p style="font-size:12px;color:#999;">Encrypted channel</p></div></div>;
-        }
-
-        function openMod(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeMod(id) { document.getElementById(id).style.display = 'none'; }
         function tab(t) {
-            ['chat','maps','hub','prof'].forEach(id => {
-                document.getElementById('view-'+id).style.display = (id===t?'block':'none');
-                document.getElementById('n-'+id).classList.toggle('on', id===t);
-            });
+            document.getElementById('view-chat').style.display = (t==='chat'?'block':'none');
+            document.getElementById('view-prof').style.display = (t==='prof'?'block':'none');
+            document.getElementById('n-chat').classList.toggle('on', t==='chat');
+            document.getElementById('n-prof').classList.toggle('on', t==='prof');
         }
     </script>
 </body>
